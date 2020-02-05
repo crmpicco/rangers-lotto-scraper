@@ -1,7 +1,14 @@
+#!/usr/bin/python
+
 # Author: Craig R Morton <crmpicco@aol.com>
+
+import boto3
 from bs4 import BeautifulSoup
+import json
+import os
 import requests
 import re
+from pprint import pprint
 
 # @TODO change this URL to the latest results page
 page = requests.get("http://www.rangerslotto.co.uk/?page_id=82&lottoId=27")
