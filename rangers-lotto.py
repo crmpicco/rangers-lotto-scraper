@@ -10,6 +10,10 @@ import requests
 import re
 from pprint import pprint
 
+# @TODO pull from environment variables, e.g os.getenv('TELEGRAM_CRMPICCO'), os.environ['TELEGRAM_APIKEY']
+telegram = TelegramBot()
+telegram_recipient = 1872
+
 # @TODO change this URL to the latest results page
 page = requests.get("http://www.rangerslotto.co.uk/?page_id=82&lottoId=27")
 
