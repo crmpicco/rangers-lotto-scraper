@@ -36,20 +36,32 @@ for text in special_divs:
 latest_results_uri = base_uri + hrefText
 print 'The Latest Results URL is ' + latest_results_uri
 
+# @TODO temp
+latest_results_uri = "http://www.rangerslotto.co.uk/?page_id=82&lottoId=33"
+
 latest_results_page = requests.get(latest_results_uri)
 latest_results_soup = BeautifulSoup(latest_results_page.content, 'html.parser')
 
-balls = []
+balls = {}
+balls_count = 0
+
 for entry_content in latest_results_soup.find_all('img',vspace='12'):
+
+    if balls_count < 5:
+        draw_day = 'sat'
+    else:
+        draw_day = 'wed'
 
     ball_number = str(entry_content['src'].rsplit('/', 1)[-1].split('.')[0])
 
     if not ball_number.startswith('bonus'):
-        balls.append(int(entry_content['src'].rsplit('/', 1)[-1].split('.')[0]))
+        balls[draw_day].append(int(entry_content['src'].rsplit('/', 1)[-1].split('.')[0]))
     else:
         bonus_ball = ball_number
+    balls_count += 1
 
 print balls
+print balls_count
 
 winning_numbers = ' ' . join(str(v) for v in balls)
 print 'The winning numbers were ' + winning_numbers
