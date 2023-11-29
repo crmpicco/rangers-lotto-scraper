@@ -1,97 +1,55 @@
-#!/usr/bin/python
-
-__author__ = "Craig R Morton"
-__copyright__ = "Copyright 2020, Craig R Morton"
-__email__ = "crmpicco@aol.com"
-__version__ = "0.1"
-__maintainer__ = "Craig R Morton"
-
-import boto3
-from bs4 import BeautifulSoup
-from twx.botapi import TelegramBot
-import json
-import os
 import requests
-import re
-from pprint import pprint
+from bs4 import BeautifulSoup
+from urllib.parse import urljoin
 
-telegram = TelegramBot(os.environ['TELEGRAM_API_KEY'])
-telegram_recipient = os.getenv('TELEGRAM_CRMPICCO')
+url = "https://www.rydc.co.uk/?page_id=82"
 
-base_uri = 'http://www.rangerslotto.co.uk'
+def get_first_week_lottery_results(url):
+    # Send a GET request to the URL
+    response = requests.get(url)
 
-page = requests.get(base_uri + "/?page_id=82")
+    # Check if the request was successful (status code 200)
+    if response.status_code == 200:
+        # Parse the HTML content using BeautifulSoup
+        soup = BeautifulSoup(response.content, "html.parser")
 
-soup = BeautifulSoup(page.content, 'html.parser')
+        # Find the first link with "Week" in its text content
+        week_link = soup.find("a", string=lambda text: "Week" in text)
 
-special_divs = soup.find_all('div',{'class':'entry-content'})
-hrefText = ''
-for text in special_divs:
-    download = text.find_all('a', href = re.compile('\page_id=82'))
-    for text in download:
-        hrefText = (text['href'])
-        print hrefText
-        break
+        if week_link:
+            # Extract the href attribute to get the link
+            week_link_url = week_link.get("href")
+            
+            # Construct the absolute URL if it's a relative link
+            week_link_url = urljoin(url, week_link_url)
 
-latest_results_uri = base_uri + hrefText
-print 'The Latest Results URL is ' + latest_results_uri
+            # Send a GET request to the linked page
+            week_response = requests.get(week_link_url)
 
-# @TODO temp
-# latest_results_uri = "http://www.rangerslotto.co.uk/?page_id=82&lottoId=33"
+            if week_response.status_code == 200:
+                # Parse the HTML content of the linked page
+                week_soup = BeautifulSoup(week_response.content, "html.parser")
 
-latest_results_page = requests.get(latest_results_uri)
-latest_results_soup = BeautifulSoup(latest_results_page.content, 'html.parser')
+                # Find the element containing the results (adjust as needed)
+                results_element = week_soup.find("div", class_="result")
 
-balls = {}
-balls_count = 0
-sat_numbers = []
-wed_numbers = []
-
-for entry_content in latest_results_soup.find_all('img',vspace='12'):
-
-    if balls_count < 5:
-        draw_day = 'sat'
-    else:
-        draw_day = 'wed'
-
-    ball_number = str(entry_content['src'].rsplit('/', 1)[-1].split('.')[0])
-
-    print ball_number
-
-    if not ball_number.startswith('bonus'):
-        if draw_day == 'sat':
-            sat_numbers.append(int(entry_content['src'].rsplit('/', 1)[-1].split('.')[0]))
+                if results_element:
+                    # Extract and print the text content of the element
+                    results = results_element.find_next("ul")  # Assuming the results are in an unordered list (adjust as needed)
+                    if results:
+                        for li in results.find_all("li"):
+                            print(li.get_text(strip=True))
+                    else:
+                        print("No results found for the specified week.")
+                else:
+                    print("No results element found on the linked page.")
+            else:
+                print(f"Failed to retrieve the linked page. Status code: {week_response.status_code}")
         else:
-            wed_numbers.append(int(entry_content['src'].rsplit('/', 1)[-1].split('.')[0]))
+            print("No link with 'Week' found.")
     else:
-        bonus_ball = ball_number
-    balls_count += 1
+        print(f"Failed to retrieve the page. Status code: {response.status_code}")
 
-balls['sat'] = sat_numbers
-balls['wed'] = wed_numbers
+# Call the function to get and parse lottery results for the first "Week" link
+get_first_week_lottery_results(url)
 
-print balls
-print balls_count
-
-winning_numbers = ' ' . join(str(v) for v in balls)
-print 'The winning numbers were ' + winning_numbers
-
-# # @TODO compare with my numbers - 18, 19, 44, 49
-my_lotto_numbers = [18, 19, 44, 49]
-
-matching_numbers = len(set(my_lotto_numbers) & set(balls))
-
-print 'You matched ' + str(matching_numbers) + ' numbers this week'
-
-print 'The bonus ball was ' + bonus_ball.replace('bonus', '')
-
-my_lotto_numbers_formatted = ' '.join(str(v) for v in my_lotto_numbers)
-
-telegram_message = ("[Rangers Lotto Results](%s)\n"
-                    "Winning Numbers: %s\n"
-                    "Your Numbers: %s\n"
-                    "You matched %s numbers this week\n"
-                    % ( latest_results_uri, winning_numbers, my_lotto_numbers_formatted, matching_numbers ))
-
-# result = telegram.send_message(telegram_recipient, telegram_message, parse_mode="Markdown").wait()
-# print result
