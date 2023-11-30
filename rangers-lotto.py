@@ -14,12 +14,12 @@ def get_first_week_lottery_results(url):
         soup = BeautifulSoup(response.content, "html.parser")
 
         # Find the first link with "Week" in its text content
-        week_link = soup.find("a", string=lambda text: "Week" in text)
+        week_link = soup.find("a", string=lambda text: text and "Week" in text)
 
         if week_link:
             # Extract the href attribute to get the link
             week_link_url = week_link.get("href")
-            
+
             # Construct the absolute URL if it's a relative link
             week_link_url = urljoin(url, week_link_url)
 
@@ -52,4 +52,3 @@ def get_first_week_lottery_results(url):
 
 # Call the function to get and parse lottery results for the first "Week" link
 get_first_week_lottery_results(url)
-
