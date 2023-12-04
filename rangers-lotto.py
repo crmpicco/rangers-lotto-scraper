@@ -6,18 +6,28 @@ import tweepy
 
 url = "https://www.rydc.co.uk/?page_id=82"
 
-api_key = "YOUR_API_KEY"
-api_secret_key = "YOUR_API_SECRET_KEY"
-access_token = "YOUR_ACCESS_TOKEN"
-access_token_secret = "YOUR_ACCESS_TOKEN_SECRET"
-
 
 def post_to_twitter(message):
-    auth = tweepy.OAuthHandler(api_key, api_secret_key)
-    auth.set_access_token(access_token, access_token_secret)
-    api = tweepy.API(auth)
+    # auth = tweepy.OAuthHandler(api_key, api_secret_key)
+    # auth.set_access_token(access_token, access_token_secret)
+    # # api = tweepy.API(auth)
+    # api = tweepy.API(auth, wait_on_rate_limit=True)
+    #
+    # api.update_status(status=message)
 
-    api.update_status(status=message)
+    # Authenticate to Twitter
+    client = tweepy.Client(
+        consumer_key=api_key,
+        consumer_secret=api_secret_key,
+        access_token=access_token,
+        access_token_secret=access_token_secret
+    )
+
+    # Post Tweet
+    message = " MESSAGE "
+    client.create_tweet(text=message)
+    print("Tweeted!")
+
 
     print("Tweet sent!")
 
@@ -73,8 +83,14 @@ def get_first_week_lottery_results(url):
                                                  [ball_numbers[i:i + 5] for i in range(0, len(ball_numbers), 5)]):
                         result_dict[date] = number_list
 
+                    twitter_message = ''
                     for date, number_list in result_dict.items():
-                        print(f"{date} = {', '.join(number_list)}")
+                        twitter_message += f"{date} = {', '.join(number_list)}"
+                        print(twitter_message)
+                        try:
+                            post_to_twitter(twitter_message)
+                        except Exception as e:
+                            print(f"There was a problem posting to Twitter - {e}")
 
                 else:
                     print("No lottery ball images found for the specified week.")
