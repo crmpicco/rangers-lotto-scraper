@@ -8,12 +8,12 @@ Description: Scrape the RYDC website, grab the latest Rangers Lotto numbers and 
 
 import os
 import re
+from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
 import tweepy
 
-url = "https://www.rydc.co.uk/?page_id=82"
+URL = "https://www.rydc.co.uk/?page_id=82"
 
 api_key = os.environ.get("TWITTER_API_KEY")
 api_secret_key = os.environ.get("TWITTER_API_SECRET_KEY")
@@ -110,6 +110,6 @@ def get_first_week_lottery_results(url):
 
 # Call the function to get and parse lottery results for the first "Week" link
 try:
-    get_first_week_lottery_results(url)
+    get_first_week_lottery_results(URL)
 except Exception as e:
     print(f"Exception thrown when getting Rangers Lotto numbers - {e}")
