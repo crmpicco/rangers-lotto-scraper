@@ -1,3 +1,11 @@
+"""Module docstring for rangers-lotto.py.
+
+Script: rangers-lotto.py
+Author: Craig R Morton
+Date: 6th December 2023
+Description: Scrape the RYDC website, grab the latest Rangers Lotto numbers and post them to Twitter.
+"""
+
 import os
 import re
 import requests
