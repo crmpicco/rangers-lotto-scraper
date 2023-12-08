@@ -149,7 +149,7 @@ def extract_lottery_numbers(ball_images, date_values):
 # Call the function to get and parse lottery results for the first "Week" link
 try:
     get_first_week_lottery_results(URL)
-except requests.exceptions.RequestException as requests_exception:
-    print(f"There was a problem with one of the requests - {requests_exception}")
-except Exception as e:
+except requests.exceptions.RequestException as exception:
+    print(f"There was a problem with one of the requests - {exception}")
+except Exception as e:  # pylint: disable=broad-except
     print(f"Exception thrown when getting Rangers Lotto numbers - {e}")
