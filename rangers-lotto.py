@@ -38,7 +38,7 @@ def post_to_twitter(message):
     )
 
     # Post Tweet
-    #client.create_tweet(text=message)
+    client.create_tweet(text=message)
     print("Tweet sent!")
 
 
@@ -120,8 +120,8 @@ def get_first_week_lottery_results(url):
 
     try:
         post_to_twitter(twitter_message)
-    except Exception as e:
-        print(f"There was a problem posting to Twitter - {e}")
+    except Exception as twitter_exception:
+        print(f"There was a problem posting to Twitter - {twitter_exception}")
 
 
 def extract_lottery_numbers(ball_images, date_values):
