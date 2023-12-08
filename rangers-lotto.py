@@ -38,11 +38,18 @@ def post_to_twitter(message):
     )
 
     # Post Tweet
-    client.create_tweet(text=message)
+    #client.create_tweet(text=message)
     print("Tweet sent!")
 
 
 def get_first_week_lottery_results(url):
+    """
+    Do a GET request to the RYDC website to get the latest Rangers Lotto numbers
+    Args:
+        url (str): The URL of the RYDC website
+    Returns:
+        None
+    """
     # Send a GET request to the URL
     response = requests.get(url)
     print(f"Getting results from {url}")
@@ -108,11 +115,35 @@ def get_first_week_lottery_results(url):
                              number_list]
         twitter_message += f"{date}\n"
         twitter_message += f"{', '.join(formatted_numbers)}"
-        print(twitter_message)
-        try:
-            post_to_twitter(twitter_message)
-        except Exception as e:
-            print(f"There was a problem posting to Twitter - {e}")
+
+    print(twitter_message)
+
+    try:
+        post_to_twitter(twitter_message)
+    except Exception as e:
+        print(f"There was a problem posting to Twitter - {e}")
+
+
+def extract_lottery_numbers(ball_images, date_values):
+    """
+    Extract lottery ball numbers and organize them into a dictionary.
+
+    Args:
+        ball_images (list): List of BeautifulSoup tag objects representing lottery ball images.
+        date_values (list): List of dates.
+
+    Returns:
+        dict: A dictionary where each date is associated with a list of lottery ball numbers.
+    """
+    # Extract and print the lottery ball numbers
+    ball_numbers = [image['src'].split('/')[-1].split('.')[0] for image in ball_images]
+
+    result_dict = {}
+    # Iterate over the dates and assign the first 5 elements of numbers to each date
+    for date, number_list in zip(date_values, [ball_numbers[i:i + 5] for i in range(0, len(ball_numbers), 5)]):
+        result_dict[date] = number_list
+
+    return result_dict
 
 
 # Call the function to get and parse lottery results for the first "Week" link
