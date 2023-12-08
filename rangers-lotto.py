@@ -120,8 +120,8 @@ def get_first_week_lottery_results(url):
 
     try:
         post_to_twitter(twitter_message)
-    except Exception as twitter_exception:
-        print(f"There was a problem posting to Twitter - {twitter_exception}")
+    except requests.exceptions.RequestException as requests_exception:
+        print(f"There was a problem posting to Twitter - {requests_exception}")
 
 
 def extract_lottery_numbers(ball_images, date_values):
