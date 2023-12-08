@@ -51,7 +51,7 @@ def get_first_week_lottery_results(url):
         None
     """
     # Send a GET request to the URL
-    response = requests.get(url)
+    response = requests.get(url, timeout=30)
     print(f"Getting results from {url}")
 
     # Check if the request was successful (status code 200)
@@ -76,7 +76,7 @@ def get_first_week_lottery_results(url):
     week_link_url = urljoin(url, week_link_url)
 
     # Send a GET request to the linked page
-    week_response = requests.get(week_link_url)
+    week_response = requests.get(week_link_url, timeout=30)
 
     if week_response.status_code != 200:
         print(f"Failed to retrieve the linked page. Status code: {week_response.status_code}")
