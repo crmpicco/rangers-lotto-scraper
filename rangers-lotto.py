@@ -22,6 +22,13 @@ access_token_secret = os.environ.get("TWITTER_ACCESS_TOKEN_SECRET")
 
 
 def post_to_twitter(message):
+    """
+    Post a tweet to Twitter with the lottery numbers scraped from the website.
+    Args:
+        message (str): The message to be posted.
+    Returns:
+        None
+    """
     # Authenticate to Twitter
     client = tweepy.Client(
         consumer_key=api_key,
