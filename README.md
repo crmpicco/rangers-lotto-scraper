@@ -3,12 +3,7 @@
 # Rangers Lotto Results Scraper
 Scrape the latest results from the Rangers Lotto site
 
-[![python](https://img.shields.io/badge/Python-3.9-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org)
-
-
-
-[![Build Status](https://github.com/crmpicco/rangers-lotto-scraper/workflows/pylint/badge.svg)](https://github.com/crmpicco/rangers-lotto-scraper/actions)
-
+[![python](https://img.shields.io/badge/Python-3.9-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org) ![Build Status](https://github.com/crmpicco/rangers-lotto-scraper/actions/workflows/pylint.yml/badge.svg)
 
 ## Crontab
 Add it to the crontab to run twice a week, for example
