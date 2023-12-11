@@ -90,6 +90,18 @@ def get_first_week_lottery_results(url):
     if not results_element:
         print("No entry content found on the linked page.")
 
+    result_dict = get_numbers(results_element)
+
+    twitter_message = build_twitter_message(result_dict)
+    print(twitter_message)
+
+    try:
+        post_to_twitter(twitter_message)
+    except requests.exceptions.RequestException as requests_exception:
+        print(f"There was a problem posting to Twitter - {requests_exception}")
+
+
+def get_numbers(results_element):
     # Find all images within the entry content
     ball_images = results_element.find_all("img")
     date_pattern = re.compile(r'\b(\w{3} \d{1,2}(?:st|nd|rd|th) \w+ \d{4})\b')
@@ -109,14 +121,7 @@ def get_first_week_lottery_results(url):
                                  [ball_numbers[i:i + 5] for i in range(0, len(ball_numbers), 5)]):
         result_dict[date] = number_list
 
-    twitter_message = build_twitter_message(result_dict)
-    print(twitter_message)
-
-    try:
-        post_to_twitter(twitter_message)
-    except requests.exceptions.RequestException as requests_exception:
-        print(f"There was a problem posting to Twitter - {requests_exception}")
-
+    return result_dict
 
 def build_twitter_message(result_dict):
     """
