@@ -109,13 +109,7 @@ def get_first_week_lottery_results(url):
                                  [ball_numbers[i:i + 5] for i in range(0, len(ball_numbers), 5)]):
         result_dict[date] = number_list
 
-    twitter_message = 'Rangers Lotto Results 🔴⚪🔵\n'
-    for date, number_list in result_dict.items():
-        formatted_numbers = [f"Bonus: {num[5:]}" if num.startswith("bonus") else num for num in
-                             number_list]
-        twitter_message += f"{date}\n"
-        twitter_message += f"{', '.join(formatted_numbers)}"
-
+    twitter_message = build_twitter_message(result_dict)
     print(twitter_message)
 
     try:
@@ -124,26 +118,25 @@ def get_first_week_lottery_results(url):
         print(f"There was a problem posting to Twitter - {requests_exception}")
 
 
-def extract_lottery_numbers(ball_images, date_values):
+def build_twitter_message(result_dict):
     """
-    Extract lottery ball numbers and organize them into a dictionary.
+    Build a formatted Twitter message for Rangers Lotto Results.
 
-    Args:
-        ball_images (list): List of BeautifulSoup tag objects representing lottery ball images.
-        date_values (list): List of dates.
+    Parameters:
+    - result_dict (dict):
+    A dictionary containing lotto results where keys are dates and values are lists of numbers.
 
     Returns:
-        dict: A dictionary where each date is associated with a list of lottery ball numbers.
+    - str: The formatted Twitter message.
     """
-    # Extract and print the lottery ball numbers
-    ball_numbers = [image['src'].split('/')[-1].split('.')[0] for image in ball_images]
+    twitter_message = 'Rangers Lotto Results 🔴⚪🔵\n'
 
-    result_dict = {}
-    # Iterate over the dates and assign the first 5 elements of numbers to each date
-    for date, number_list in zip(date_values, [ball_numbers[i:i + 5] for i in range(0, len(ball_numbers), 5)]):
-        result_dict[date] = number_list
+    for date, number_list in result_dict.items():
+        formatted_numbers = [f"Bonus: {num[5:]}" if num.startswith("bonus") else num for num in number_list]
+        twitter_message += f"{date}\n"
+        twitter_message += f"{', '.join(formatted_numbers)}"
 
-    return result_dict
+    return twitter_message
 
 
 # Call the function to get and parse lottery results for the first "Week" link
