@@ -102,6 +102,11 @@ def get_first_week_lottery_results(url):
 
 
 def get_numbers(results_element):
+    """
+    Get the numbers from the page
+    :param results_element: The markup
+    :return: A dictionary of results
+    """
     # Find all images within the entry content
     ball_images = results_element.find_all("img")
     date_pattern = re.compile(r'\b(\w{3} \d{1,2}(?:st|nd|rd|th) \w+ \d{4})\b')
