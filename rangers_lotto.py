@@ -8,6 +8,7 @@ Description: Scrape the RYDC website, grab the latest Rangers Lotto numbers and 
 
 import os
 import re
+import sys
 from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
@@ -20,6 +21,9 @@ api_secret_key = os.environ.get("TWITTER_API_SECRET_KEY")
 access_token = os.environ.get("TWITTER_ACCESS_TOKEN")
 access_token_secret = os.environ.get("TWITTER_ACCESS_TOKEN_SECRET")
 
+if any(env_var is None for env_var in [api_key, api_secret_key, access_token, access_token_secret]):
+    print("Some environment variables are not set. All 4 environment variables must be configured to post to Twitter.")
+    sys.exit(1)
 
 def post_to_twitter(message):
     """
