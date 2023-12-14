@@ -13,6 +13,8 @@ from urllib.parse import urljoin
 import requests
 from bs4 import BeautifulSoup
 import tweepy
+from telegram import Bot
+import asyncio
 
 URL = "https://www.rydc.co.uk/?page_id=82"
 
@@ -21,9 +23,19 @@ api_secret_key = os.environ.get("TWITTER_API_SECRET_KEY")
 access_token = os.environ.get("TWITTER_ACCESS_TOKEN")
 access_token_secret = os.environ.get("TWITTER_ACCESS_TOKEN_SECRET")
 
+telegram_bot_token = os.environ.get("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHANNEL_ID = '@GlasgowRangersUpdates'
+
 if any(env_var is None for env_var in [api_key, api_secret_key, access_token, access_token_secret]):
     print("Some environment variables are not set. All 4 environment variables must be configured to post to Twitter.")
     sys.exit(1)
+
+
+async def post_to_telegram(message):
+    bot = Bot(token=telegram_bot_token)
+    await bot.send_message(chat_id=TELEGRAM_CHANNEL_ID, text=message)
+    print(f"Posted to Telegram")
+
 
 def post_to_twitter(message):
     """
@@ -42,7 +54,7 @@ def post_to_twitter(message):
     )
 
     # Post Tweet
-    client.create_tweet(text=message)
+    # client.create_tweet(text=message)
     print("Tweet sent!")
 
 
@@ -101,8 +113,13 @@ def get_first_week_lottery_results(url):
 
     try:
         post_to_twitter(twitter_message)
+
+        async def telegram_post():
+            await post_to_telegram(twitter_message)
     except requests.exceptions.RequestException as requests_exception:
         print(f"There was a problem posting to Twitter - {requests_exception}")
+
+    asyncio.run(telegram_post())
 
 
 def get_numbers(results_element):
@@ -131,6 +148,7 @@ def get_numbers(results_element):
         result_dict[date] = number_list
 
     return result_dict
+
 
 def build_twitter_message(result_dict):
     """
