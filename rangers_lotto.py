@@ -54,7 +54,7 @@ def post_to_twitter(message):
     )
 
     # Post Tweet
-    # client.create_tweet(text=message)
+    client.create_tweet(text=message)
     print("Tweet sent!")
 
 
@@ -134,7 +134,6 @@ def get_numbers(results_element):
     matches = list(date_pattern.finditer(results_element.get_text()))
     # print(matches)
     date_values = [match.group(0) for match in matches]
-    # print(date_values)
     if not ball_images:
         print("No lottery ball images found for the specified week.")
 
