@@ -163,7 +163,7 @@ def build_twitter_message(result_dict):
     twitter_message = 'Rangers Lotto Results 🔴⚪🔵\n'
 
     for date, number_list in result_dict.items():
-        formatted_numbers = [f"Bonus: {num[5:]}" if num.startswith("bonus") else num for num in number_list]
+        formatted_numbers = [f"Bonus: {num[5:]}\n" if num.startswith("bonus") else num for num in number_list]
         twitter_message += f"{date}\n"
         twitter_message += f"{', '.join(formatted_numbers)}"
 
