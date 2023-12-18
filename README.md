@@ -3,7 +3,8 @@
 # Rangers Lotto Results Scraper
 Scrape the latest results from the [Rangers Lotto site](https://www.rydc.co.uk)
 
-[![python](https://img.shields.io/badge/Python-3.9-3776AB.svg?style=flat&logo=python&logoColor=white)](https://www.python.org) ![Build Status](https://github.com/crmpicco/rangers-lotto-scraper/actions/workflows/pylint.yml/badge.svg)
+![Build Status](https://github.com/crmpicco/rangers-lotto-scraper/actions/workflows/pylint.yml/badge.svg)
+[![Python Versions](https://img.shields.io/badge/Python-3.8%2C%203.9%2C%203.10%2C%203.11-blue?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 
 ## Setup
 ### Environment variables
@@ -22,5 +23,5 @@ export TELEGRAM_BOT_TOKEN="your_telegram_bot_token"
 Add it to the crontab to run twice a week, for example
 ```commandline
 # Post the Rangers Lotto results to Twitter twice per week
-09 09 * * 1,4 . $HOME/.zshrc; source /opt/virtualenv/rangers-lotto/bin/activate && /opt/virtualenv/rangers-lotto/bin/python3 /Users/craigrmorton/rangers-lotto-scraper/rangers_lotto.py > /var/log/rangers-lotto-scraper.log 2>&1
+09 09 * * 1,4 . $HOME/.zshrc; source /opt/virtualenv/rangers-lotto/bin/activate && /opt/virtualenv/rangers-lotto/bin/python3 /Users/crmpicco/rangers-lotto-scraper/rangers_lotto.py > /var/log/rangers-lotto-scraper.log 2>&1
 ```
