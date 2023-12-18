@@ -32,6 +32,13 @@ if any(env_var is None for env_var in [api_key, api_secret_key, access_token, ac
 
 
 async def post_to_telegram(message):
+    """
+    Post a message to the 'Glasgow Rangers Updates' Telegram channel
+    Args:
+         message (str): The message to be posted
+    Returns:
+        None
+    """
     bot = Bot(token=telegram_bot_token)
     await bot.send_message(chat_id=TELEGRAM_CHANNEL_ID, text=message)
     print(f"Posted to Telegram")
