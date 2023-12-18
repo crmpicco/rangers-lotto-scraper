@@ -10,11 +10,11 @@ import os
 import re
 import sys
 from urllib.parse import urljoin
+import asyncio
 import requests
 from bs4 import BeautifulSoup
 import tweepy
 from telegram import Bot
-import asyncio
 
 URL = "https://www.rydc.co.uk/?page_id=82"
 
@@ -41,7 +41,7 @@ async def post_to_telegram(message):
     """
     bot = Bot(token=telegram_bot_token)
     await bot.send_message(chat_id=TELEGRAM_CHANNEL_ID, text=message)
-    print(f"Posted to Telegram")
+    print("Posted to Telegram")
 
 
 def post_to_twitter(message):
