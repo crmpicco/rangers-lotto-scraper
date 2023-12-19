@@ -1,9 +1,10 @@
 name: Bandit
+
 on:
   pull_request:
   push:
     branches:
-      - master #dev, release, etc.
+      - master
   release:
     types:
       - created
@@ -13,12 +14,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          fetch-depth: 0 #get fuller history
+          python-version: 3.7
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit
+
       - name: Run Bandit Report
-        uses: libertyy/py3-bandit-check@v2
+        run: bandit -r .
+
       - name: Save Bandit txt Report
         if: ${{ always() }}
         uses: actions/upload-artifact@v2
         with:
-          path: ${{ RUNNER.temp }}/_github_home/bandit_report.out
+          path: bandit_report.txt
