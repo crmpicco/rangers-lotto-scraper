@@ -1,9 +1,8 @@
-"""Module docstring for rangers-lotto.py.
-
+"""
 Script: rangers_lotto.py
 Author: Craig R Morton
 Date: 6th December 2023
-Description: Scrape the RYDC website, grab the latest Rangers Lotto numbers and post them to Twitter.
+Description: Scrape the RYDC website, grab the latest Rangers Lotto numbers and post them to Twitter and Telegram.
 """
 
 import os
@@ -16,17 +15,18 @@ from bs4 import BeautifulSoup
 import tweepy
 from telegram import Bot
 
-URL = "https://www.rydc.co.uk/?page_id=82"
+RYDC_URL = "https://www.rydc.co.uk/?page_id=82"
 
-api_key = os.environ.get("TWITTER_API_KEY")
-api_secret_key = os.environ.get("TWITTER_API_SECRET_KEY")
-access_token = os.environ.get("TWITTER_ACCESS_TOKEN")
-access_token_secret = os.environ.get("TWITTER_ACCESS_TOKEN_SECRET")
+twitter_api_key = os.environ.get("TWITTER_API_KEY")
+twitter_api_secret_key = os.environ.get("TWITTER_API_SECRET_KEY")
+twitter_access_token = os.environ.get("TWITTER_ACCESS_TOKEN")
+twitter_access_token_secret = os.environ.get("TWITTER_ACCESS_TOKEN_SECRET")
 
 telegram_bot_token = os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHANNEL_ID = '@GlasgowRangersUpdates'
 
-if any(env_var is None for env_var in [api_key, api_secret_key, access_token, access_token_secret]):
+if any(env_var is None for env_var in
+       [twitter_api_key, twitter_api_secret_key, twitter_access_token, twitter_access_token_secret]):
     print("Some environment variables are not set. All 4 environment variables must be configured to post to Twitter.")
     sys.exit(1)
 
@@ -54,10 +54,10 @@ def post_to_twitter(message):
     """
     # Authenticate to Twitter
     client = tweepy.Client(
-        consumer_key=api_key,
-        consumer_secret=api_secret_key,
-        access_token=access_token,
-        access_token_secret=access_token_secret
+        consumer_key=twitter_api_key,
+        consumer_secret=twitter_api_secret_key,
+        access_token=twitter_access_token,
+        access_token_secret=twitter_access_token_secret
     )
 
     # Post Tweet
@@ -179,7 +179,7 @@ def build_twitter_message(result_dict):
 
 # Call the function to get and parse lottery results for the first "Week" link
 try:
-    get_first_week_lottery_results(URL)
+    get_first_week_lottery_results(RYDC_URL)
 except requests.exceptions.RequestException as exception:
     print(f"There was a problem with one of the requests - {exception}")
 except Exception as e:  # pylint: disable=broad-except
