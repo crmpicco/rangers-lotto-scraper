@@ -148,11 +148,18 @@ def get_first_week_lottery_results(url):
 
 
 def check_results(results):
+    """
+    Check the results and post to the user if they have hit the jackpot!
+    :param results: Dictionary of dates to results
+    :return: None
+    """
     for date, number_list in results.items():
         if number_list == list(selected_balls.values()):
             # jackpot!
             async def telegram_post():
-                await post_to_telegram('You have won the Rangers Lotto jackpot! Contact rydc.co.uk', telegram_user_id)
+                await post_to_telegram(
+                    f'You have won the Rangers Lotto jackpot for {date}! Contact rydc.co.uk', telegram_user_id
+                )
 
             asyncio.run(telegram_post())
 
