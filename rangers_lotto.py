@@ -17,12 +17,15 @@ from telegram import Bot
 
 RYDC_URL = "https://www.rydc.co.uk/?page_id=82"
 
+# Twitter config
 twitter_api_key = os.environ.get("TWITTER_API_KEY")
 twitter_api_secret_key = os.environ.get("TWITTER_API_SECRET_KEY")
 twitter_access_token = os.environ.get("TWITTER_ACCESS_TOKEN")
 twitter_access_token_secret = os.environ.get("TWITTER_ACCESS_TOKEN_SECRET")
 
+# Telegram config
 telegram_bot_token = os.environ.get("TELEGRAM_BOT_TOKEN")
+telegram_user_id = os.environ.get("TELEGRAM_USER_ID")
 TELEGRAM_CHANNEL_ID = '@GlasgowRangersUpdates'
 
 if any(env_var is None for env_var in
@@ -30,17 +33,30 @@ if any(env_var is None for env_var in
     print("Some environment variables are not set. All 4 environment variables must be configured to post to Twitter.")
     sys.exit(1)
 
+if len(sys.argv) != 5:
+    print("You need to provide 4 individual lottery numbers")
+    print("Usage: python rangers_lotto.py 5 9 16 18")
+    sys.exit(1)
 
-async def post_to_telegram(message):
+selected_balls = {
+    'ball1': int(sys.argv[1]),
+    'ball2': int(sys.argv[2]),
+    'ball3': int(sys.argv[3]),
+    'ball4': int(sys.argv[4]),
+}
+
+
+async def post_to_telegram(message, channel_id=TELEGRAM_CHANNEL_ID):
     """
     Post a message to the 'Glasgow Rangers Updates' Telegram channel
     Args:
          message (str): The message to be posted
+         channel_id (str): The Telegram channel ID (default is TELEGRAM_CHANNEL_ID)
     Returns:
         None
     """
     bot = Bot(token=telegram_bot_token)
-    await bot.send_message(chat_id=TELEGRAM_CHANNEL_ID, text=message)
+    await bot.send_message(chat_id=channel_id, text=message)
     print("Posted to Telegram")
 
 
@@ -115,6 +131,8 @@ def get_first_week_lottery_results(url):
 
     result_dict = get_numbers(results_element)
 
+    check_results(result_dict)
+
     twitter_message = build_twitter_message(result_dict)
     print(twitter_message)
 
@@ -123,10 +141,20 @@ def get_first_week_lottery_results(url):
 
         async def telegram_post():
             await post_to_telegram(twitter_message)
+
+        asyncio.run(telegram_post())
     except requests.exceptions.RequestException as requests_exception:
         print(f"There was a problem posting to Twitter - {requests_exception}")
 
-    asyncio.run(telegram_post())
+
+def check_results(results):
+    for date, number_list in results.items():
+        if number_list == list(selected_balls.values()):
+            # jackpot!
+            async def telegram_post():
+                await post_to_telegram('You have won the Rangers Lotto jackpot! Contact rydc.co.uk', telegram_user_id)
+
+            asyncio.run(telegram_post())
 
 
 def get_numbers(results_element):
@@ -158,7 +186,7 @@ def get_numbers(results_element):
 
 def build_twitter_message(result_dict):
     """
-    Build a formatted Twitter message for Rangers Lotto Results.
+    Build a formatted Twitter message for the Rangers Lotto Results.
 
     Parameters:
     - result_dict (dict):
@@ -177,10 +205,11 @@ def build_twitter_message(result_dict):
     return twitter_message
 
 
-# Call the function to get and parse lottery results for the first "Week" link
-try:
-    get_first_week_lottery_results(RYDC_URL)
-except requests.exceptions.RequestException as exception:
-    print(f"There was a problem with one of the requests - {exception}")
-except Exception as e:  # pylint: disable=broad-except
-    print(f"Exception thrown when getting Rangers Lotto numbers - {e}")
+if __name__ == "__main__":
+    # Call the function to get and parse lottery results for the first "Week" link
+    try:
+        get_first_week_lottery_results(RYDC_URL)
+    except requests.exceptions.RequestException as exception:
+        print(f"There was a problem with one of the requests - {exception}")
+    except Exception as e:  # pylint: disable=broad-except
+        print(f"Exception thrown when getting Rangers Lotto numbers - {e}")
