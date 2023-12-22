@@ -40,6 +40,6 @@ export TELEGRAM_USER_ID="187219972021"
 ## Crontab
 Add it to the crontab to run twice a week, for example. Pass in your numbers (e.g. `1 6 9 55`) to check if you have hit the jackpot! 💰
 ```commandline
-# Post the Rangers Lotto results to Twitter twice per week
+# Post the Rangers Lotto results to Twitter and Telegram twice per week
 09 09 * * 1,4 . $HOME/.zshrc; source /opt/virtualenv/rangers-lotto/bin/activate && /opt/virtualenv/rangers-lotto/bin/python3 /Users/crmpicco/rangers-lotto-scraper/rangers_lotto.py 1 6 9 55 > /var/log/rangers-lotto-scraper.log 2>&1
 ```
