@@ -1,7 +1,7 @@
 ![Rangers Lotto](https://i.imgur.com/SkxOHiF.png)
 
 # Rangers Lotto Results Scraper
-Scrape the latest results from the [Rangers Lotto site](https://www.rydc.co.uk)
+Scrape the latest results from the [Rangers Lotto site](https://www.rydc.co.uk) following the draw of the lottery numbers and post them to Twitter and Telegram.
 
 ![Build Status](https://github.com/crmpicco/rangers-lotto-scraper/actions/workflows/pylint.yml/badge.svg)
 ![Build Status](https://github.com/crmpicco/rangers-lotto-scraper/actions/workflows/bandit.yml/badge.svg)
@@ -12,6 +12,17 @@ Scrape the latest results from the [Rangers Lotto site](https://www.rydc.co.uk)
 [![Telegram](https://img.shields.io/badge/-telegram-red?color=white&logo=telegram&logoColor=black)](https://t.me/GlasgowRangersUpdates)
 
 ## Setup
+
+### Virtual Environment
+```shell
+# Create a virtual environment named "rangers-lotto"
+python3 -m venv /opt/virtualenv/rangers-lotto
+# Activate the virtual environment
+source /opt/virtualenv/rangers-lotto/bin/activate
+# Install project dependencies
+pip install -r requirements.txt
+```
+
 ### Environment variables
 ```shell
 # RangersLottoBot Twitter API keys
