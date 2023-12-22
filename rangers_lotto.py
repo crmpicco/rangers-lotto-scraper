@@ -163,7 +163,7 @@ def check_results(results: Dict[str, List[Union[int, str]]]) -> None:
             # jackpot!
             post_to_telegram(f'You have won the Rangers Lotto jackpot for {date}! Contact rydc.co.uk', telegram_user_id)
 
-        # TODO: find out what sequence or other matches result in a win
+        # TODO: find out what sequence or other matches result in a win  # pylint: disable=W0511
 
 
 def get_numbers(results_element: str) -> Dict[str, List[Union[int, str]]]:
