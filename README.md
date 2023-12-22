@@ -5,7 +5,7 @@ Scrape the latest results from the [Rangers Lotto site](https://www.rydc.co.uk)
 
 ![Build Status](https://github.com/crmpicco/rangers-lotto-scraper/actions/workflows/pylint.yml/badge.svg)
 ![Build Status](https://github.com/crmpicco/rangers-lotto-scraper/actions/workflows/bandit.yml/badge.svg)
-[![Python Versions](https://img.shields.io/badge/Python-3.8%2C%203.9%2C%203.10%2C%203.11-blue?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![Python Versions](https://img.shields.io/badge/Python-3.8%2C%203.9%2C%203.10%2C%203.11%2C%203.12-blue?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 
 ## Social
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/RangersLottoBot.svg?style=social&label=Follow%20%40RangersLottoBot)](https://twitter.com/RangersLottoBot)
