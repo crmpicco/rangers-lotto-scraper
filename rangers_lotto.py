@@ -159,7 +159,7 @@ def check_results(results: Dict[str, List[Union[int, str]]]) -> None:
     for date, number_list in results.items():
         # check the first four numbers only and use a list comprehension to convert them to integers
         number_list_int = [int(num) for num in number_list[:4]]
-        if number_list_int == list(selected_balls.values()) or True:
+        if number_list_int == list(selected_balls.values()):
             # jackpot!
             post_to_telegram(f'You have won the Rangers Lotto jackpot for {date}! Contact rydc.co.uk', telegram_user_id)
 
