@@ -22,6 +22,8 @@ export TWITTER_ACCESS_TOKEN_SECRET="your_twitter_access_token_secret"
 
 # RangersLottoBot Telegram Bot Key
 export TELEGRAM_BOT_TOKEN="your_telegram_bot_token"
+# Your UserID in Telegram (use GetIDs Bot)
+export TELEGRAM_USER_ID="187219972021"
 ```
 
 ## Crontab
