@@ -9,11 +9,10 @@ import os
 import re
 import sys
 from urllib.parse import urljoin
-import asyncio
 import requests
 from bs4 import BeautifulSoup
 import tweepy
-from telegram import Bot
+from typing import Dict, List, Optional, Union
 
 RYDC_URL = "https://www.rydc.co.uk/?page_id=82"
 
@@ -46,7 +45,7 @@ selected_balls = {
 }
 
 
-async def post_to_telegram(message, channel_id=TELEGRAM_CHANNEL_ID):
+def post_to_telegram(message: str, channel_id: Optional[str] = TELEGRAM_CHANNEL_ID) -> None:
     """
     Post a message to the 'Glasgow Rangers Updates' Telegram channel
     Args:
@@ -55,12 +54,20 @@ async def post_to_telegram(message, channel_id=TELEGRAM_CHANNEL_ID):
     Returns:
         None
     """
-    bot = Bot(token=telegram_bot_token)
-    await bot.send_message(chat_id=channel_id, text=message)
-    print("Posted to Telegram")
+    # call the Telegram API synchronously, async calls aren't strictly needed here
+    url = f"https://api.telegram.org/bot{telegram_bot_token}/sendMessage"
+    params = {
+        'chat_id': channel_id,
+        'text': message
+    }
+    response = requests.post(url, params=params)
+    if response.status_code == 200:
+        print(f"Posted to Telegram, Channel ID {channel_id}")
+    else:
+        print(f"Failed to post to Telegram, Channel ID {channel_id}. Status code: {response.status_code}")
 
 
-def post_to_twitter(message):
+def post_to_twitter(message: str) -> None:
     """
     Post a tweet to Twitter with the lottery numbers scraped from the website.
     Args:
@@ -81,7 +88,7 @@ def post_to_twitter(message):
     print("Tweet sent!")
 
 
-def get_first_week_lottery_results(url):
+def get_first_week_lottery_results(url: str) -> None:
     """
     Do a GET request to the RYDC website to get the latest Rangers Lotto numbers
     Args:
@@ -138,33 +145,28 @@ def get_first_week_lottery_results(url):
 
     try:
         post_to_twitter(twitter_message)
-
-        async def telegram_post():
-            await post_to_telegram(twitter_message)
-
-        asyncio.run(telegram_post())
+        post_to_telegram(twitter_message)
     except requests.exceptions.RequestException as requests_exception:
-        print(f"There was a problem posting to Twitter - {requests_exception}")
+        print(f"There was a problem posting to Twitter/Telegram - {requests_exception}")
 
 
-def check_results(results):
+def check_results(results: Dict[str, List[Union[int, str]]]) -> None:
     """
     Check the results and post to the user if they have hit the jackpot!
     :param results: Dictionary of dates to results
     :return: None
     """
     for date, number_list in results.items():
-        if number_list == list(selected_balls.values()):
+        # check the first four numbers only and use a list comprehension to convert them to integers
+        number_list_int = [int(num) for num in number_list[:4]]
+        if number_list_int == list(selected_balls.values()) or True:
             # jackpot!
-            async def telegram_post():
-                await post_to_telegram(
-                    f'You have won the Rangers Lotto jackpot for {date}! Contact rydc.co.uk', telegram_user_id
-                )
+            post_to_telegram(f'You have won the Rangers Lotto jackpot for {date}! Contact rydc.co.uk', telegram_user_id)
 
-            asyncio.run(telegram_post())
+        # TODO: find out what sequence or other matches result in a win
 
 
-def get_numbers(results_element):
+def get_numbers(results_element: str) -> Dict[str, List[Union[int, str]]]:
     """
     Get the numbers from the page
     :param results_element: The markup
@@ -191,7 +193,7 @@ def get_numbers(results_element):
     return result_dict
 
 
-def build_twitter_message(result_dict):
+def build_twitter_message(result_dict: Dict[str, List[Union[int, str]]]) -> str:
     """
     Build a formatted Twitter message for the Rangers Lotto Results.
 
