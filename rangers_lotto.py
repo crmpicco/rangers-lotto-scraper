@@ -9,10 +9,10 @@ import os
 import re
 import sys
 from urllib.parse import urljoin
+from typing import Dict, List, Optional, Union
 import requests
 from bs4 import BeautifulSoup
 import tweepy
-from typing import Dict, List, Optional, Union
 
 RYDC_URL = "https://www.rydc.co.uk/?page_id=82"
 
