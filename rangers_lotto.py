@@ -60,7 +60,7 @@ def post_to_telegram(message: str, channel_id: Optional[str] = TELEGRAM_CHANNEL_
         'chat_id': channel_id,
         'text': message
     }
-    response = requests.post(url, params=params)
+    response = requests.post(url, params=params, timeout=30)
     if response.status_code == 200:
         print(f"Posted to Telegram, Channel ID {channel_id}")
     else:
